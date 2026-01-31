@@ -41,7 +41,21 @@ Provides coroutine dispatchers with qualifiers for proper threading:
 Provides Android system services (ConnectivityManager, etc.) via Hilt injection.
 
 ### CommonModule
-Provides common dependencies like JSON serialization.
+Provides common dependencies like `ResourceProvider` for string resource access.
+
+### DataStoreModule
+Provides DataStore-related dependencies as singletons:
+- `DataStore<Preferences>` - Jetpack DataStore instance
+- `DataStoreSource` - Abstraction for preference storage
+- `PreferencesRepository` - Repository interface for preferences
+
+These are also registered with their respective companion objects via `setInstance()` for backward compatibility with non-Hilt code (e.g., knox-tactical use cases).
+
+### KnoxLicensingModule
+Provides Knox licensing dependencies:
+- `KnoxLicenseInitializer` - Manages Knox license initialization with reactive `StateFlow` status
+
+The initializer is also registered with `KnoxStartupManager.setInstance()` for backward compatibility.
 
 ## Usage
 
@@ -93,7 +107,39 @@ val result = SetBrightnessValueUseCase().invoke(brightness = 100)
 
 ## Licensing
 
-For Knox license management, apps should provide their own Hilt bindings using `knox-licensing`. See the app module's `KnoxLicensingModule` for an example implementation. This gives apps full control over license configuration and selection strategy.
+Knox license initialization is handled by `KnoxLicensingModule` which provides `KnoxLicenseInitializer`.
+
+For license selection strategy configuration, apps should provide their own binding:
+
+```kotlin
+@Module
+@InstallIn(SingletonComponent::class)
+object AppLicensingModule {
+    @Provides
+    @Singleton
+    fun provideLicenseSelectionStrategy(): LicenseSelectionStrategy {
+        return MyCustomLicenseSelectionStrategy()
+    }
+}
+```
+
+Then inject and use the initializer:
+
+```kotlin
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val licenseInitializer: KnoxLicenseInitializer
+) : ViewModel() {
+
+    val licenseStatus = licenseInitializer.licenseStatus
+
+    fun initializeLicense(context: Context) {
+        viewModelScope.launch {
+            licenseInitializer.initialize(context)
+        }
+    }
+}
+```
 
 ## Alternative DI Frameworks
 

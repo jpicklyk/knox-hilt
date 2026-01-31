@@ -21,11 +21,16 @@ dependencies {
     implementation(project(":knox-core:usecase-executor"))
     implementation(project(":knox-core:android"))
     implementation(project(":knox-core:common"))
+    implementation(project(":knox-licensing"))
 
     // Android dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
+    // DataStore
+    implementation(libs.androidx.datastore)
+    implementation(libs.androidx.datastore.preferences)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
