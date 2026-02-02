@@ -17,11 +17,11 @@ android {
 
 dependencies {
     // Knox core dependencies (policy framework)
-    implementation(project(":knox-core:feature"))
-    implementation(project(":knox-core:usecase-executor"))
-    implementation(project(":knox-core:android"))
-    implementation(project(":knox-core:common"))
-    implementation(project(":knox-licensing"))
+    implementation(projects.knoxCore.feature)
+    implementation(projects.knoxCore.usecaseExecutor)
+    implementation(projects.knoxCore.android)
+    implementation(projects.knoxCore.common)
+    implementation(projects.knoxLicensing)
 
     // Android dependencies
     implementation(libs.androidx.core.ktx)
