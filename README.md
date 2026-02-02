@@ -51,6 +51,32 @@ Provides DataStore-related dependencies as singletons:
 
 These are also registered with their respective companion objects via `setInstance()` for backward compatibility with non-Hilt code (e.g., knox-tactical use cases).
 
+### PolicyGroupingModule
+Provides the default policy grouping strategy:
+- `PolicyGroupingStrategy` - Interface for grouping policies in the UI
+- Default implementation: `CapabilityBasedGroupingStrategy` (groups by MODIFIES_* capability)
+
+To override with a custom grouping strategy:
+
+```kotlin
+@Module
+@InstallIn(SingletonComponent::class)
+object CustomGroupingModule {
+    @Provides
+    @Singleton
+    fun provideGroupingStrategy(): PolicyGroupingStrategy {
+        return ConfigurableGroupingStrategy(
+            GroupingConfiguration.builder()
+                .addGroup("quick", "Quick Access")
+                .addGroup("advanced", "Advanced Settings")
+                .assignPolicies("quick", "tactical_device_mode", "night_vision_mode")
+                .assignPolicies("advanced", "enable_hdm", "band_locking_5g")
+                .build()
+        )
+    }
+}
+```
+
 ### KnoxLicensingModule
 Provides Knox licensing dependencies:
 - `KnoxLicenseInitializer` - Manages Knox license initialization with reactive `StateFlow` status
@@ -84,7 +110,8 @@ class YourApplication : Application()
 ```kotlin
 @HiltViewModel
 class YourViewModel @Inject constructor(
-    private val policyRegistry: PolicyRegistry
+    private val policyRegistry: PolicyRegistry,
+    private val groupingStrategy: PolicyGroupingStrategy
 ) : ViewModel() {
 
     fun loadPolicies() {
@@ -92,6 +119,22 @@ class YourViewModel @Inject constructor(
             val policies = policyRegistry.getAllPolicies()
             // Handle policies
         }
+    }
+
+    fun loadGroupedPolicies() {
+        // Get policies organized by groups
+        val groups = groupingStrategy.resolveAllGroups(policyRegistry)
+        groups.forEach { resolvedGroup ->
+            println("Group: ${resolvedGroup.group.displayName}")
+            resolvedGroup.policies.forEach { policy ->
+                println("  - ${policy.title}")
+            }
+        }
+    }
+
+    fun findRadioPolicies() {
+        // Query by capability
+        val radioPolicies = policyRegistry.getByCapability(PolicyCapability.MODIFIES_RADIO)
     }
 }
 ```
