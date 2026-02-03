@@ -24,6 +24,16 @@ The Knox modules (knox-core, knox-enterprise) are designed to be DI-agnostic. Th
 
 ## Provided Modules
 
+### EnterprisePolicyBindingsModule
+Provides Knox Enterprise policy components to Hilt via multibindings. This module consumes the DI-agnostic `GeneratedPolicyComponents` from knox-enterprise and provides them as a `Set<PolicyComponent>`.
+
+```kotlin
+// Automatically included - no setup required
+@Provides @ElementsIntoSet
+fun provideEnterprisePolicies(): Set<PolicyComponent<out PolicyState>> =
+    GeneratedPolicyComponents.getAll().toSet()
+```
+
 ### PolicyRegistryModule
 Binds `HiltPolicyRegistry` as the `PolicyRegistry` implementation. This registry manages all Knox policy components and provides access to policy state.
 
@@ -49,7 +59,7 @@ Provides DataStore-related dependencies as singletons:
 - `DataStoreSource` - Abstraction for preference storage
 - `PreferencesRepository` - Repository interface for preferences
 
-These are also registered with their respective companion objects via `setInstance()` for backward compatibility with non-Hilt code (e.g., knox-tactical use cases).
+These are also registered with their respective companion objects via `setInstance()` for backward compatibility with non-Hilt code paths.
 
 ### PolicyGroupingModule
 Provides the default policy grouping strategy:
