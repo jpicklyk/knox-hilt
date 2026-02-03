@@ -25,6 +25,9 @@ dependencies {
     implementation(projects.knoxCore.common)
     implementation(projects.knoxLicensing)
 
+    // Knox enterprise policies (for Hilt bindings)
+    implementation(projects.knoxEnterprise)
+
     // Android dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
