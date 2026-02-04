@@ -73,8 +73,28 @@ object CustomGroupingModule {
 
 ## Key Classes
 
-- `HiltPolicyRegistry`: Wraps `CachedPolicyRegistry`/`DefaultPolicyRegistry`, receives policy components via Hilt setter injection
+- `HiltPolicyRegistry`: Uses Kotlin `by` delegation to forward all `PolicyRegistry` methods to `CachedPolicyRegistry`. Receives policy components via Hilt setter injection. The delegation pattern ensures new interface methods are automatically supported without code changes.
 - `HiltAndroidContextProvider`: Simple wrapper providing application context to knox modules
+
+## Design Pattern: Kotlin Delegation for Hilt Wrappers
+
+When creating Hilt-injectable wrappers around knox-core interfaces, use Kotlin's `by` delegation to avoid manual method forwarding:
+
+```kotlin
+@Singleton
+class HiltPolicyRegistry @Inject constructor() : PolicyRegistry by delegate {
+    companion object {
+        private val delegate = CachedPolicyRegistry(DefaultPolicyRegistry())
+    }
+
+    @Inject
+    fun setComponents(components: Set<@JvmSuppressWildcards PolicyComponent<out PolicyState>>) {
+        delegate.components = components
+    }
+}
+```
+
+This eliminates boilerplate and ensures interface changes are automatically supported.
 
 ## Testing Notes
 
