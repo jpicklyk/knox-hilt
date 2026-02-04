@@ -7,6 +7,7 @@ import net.sfelabs.knox.core.feature.api.PolicyComponent
 import net.sfelabs.knox.core.feature.api.PolicyKey
 import net.sfelabs.knox.core.feature.api.PolicyState
 import net.sfelabs.knox.core.feature.data.repository.CachedPolicyRegistry
+import net.sfelabs.knox.core.feature.domain.model.Policy
 import net.sfelabs.knox.core.feature.data.repository.DefaultPolicyRegistry
 import net.sfelabs.knox.core.feature.domain.registry.PolicyRegistry
 import javax.inject.Inject
@@ -37,6 +38,11 @@ class HiltPolicyRegistry @Inject constructor() : PolicyRegistry {
         policyKey: PolicyKey<T>,
         state: T
     ): ApiResult<Unit> = delegate.setPolicyState(policyKey, state)
+
+    override suspend fun <T : PolicyState> setAndRefreshPolicyState(
+        policyKey: PolicyKey<T>,
+        state: T
+    ): ApiResult<Policy<T>> = delegate.setAndRefreshPolicyState(policyKey, state)
 
     // Capability-based query delegations
     override fun getByCapability(capability: PolicyCapability) = delegate.getByCapability(capability)
