@@ -28,7 +28,7 @@ import javax.inject.Singleton
  *
  * The provided instances are also registered with the companion object factories
  * in [DataStoreSource] and [PreferencesRepository] for backward compatibility
- * with code that uses the `getInstance()` pattern (e.g., knox-tactical).
+ * with code that uses the `getInstance()` pattern (e.g., standalone libraries).
  */
 @Module
 @InstallIn(SingletonComponent::class)

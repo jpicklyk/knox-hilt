@@ -43,7 +43,7 @@ import javax.inject.Singleton
  *         val config = GroupingConfiguration.builder()
  *             .addGroup("quick", "Quick Toggles")
  *             .addGroup("advanced", "Advanced")
- *             .assignPolicies("quick", "tactical_device_mode", "enable_night_vision_mode")
+ *             .assignPolicies("quick", "device_lock_mode", "screen_brightness")
  *             .assignPolicies("advanced", "enable_hdm", "band_locking_5g")
  *             .build()
  *         return ConfigurableGroupingStrategy(config)

@@ -79,7 +79,7 @@ object CustomGroupingModule {
             GroupingConfiguration.builder()
                 .addGroup("quick", "Quick Access")
                 .addGroup("advanced", "Advanced Settings")
-                .assignPolicies("quick", "tactical_device_mode", "night_vision_mode")
+                .assignPolicies("quick", "device_lock_mode", "screen_brightness")
                 .assignPolicies("advanced", "enable_hdm", "band_locking_5g")
                 .build()
         )
