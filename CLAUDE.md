@@ -23,7 +23,7 @@ knox-hilt is a Dagger Hilt integration module that provides dependency injection
 
 ### Module Dependency Flow
 ```
-your-app -> knox-hilt -> knox-core/knox-enterprise -> core modules
+app -> knox-hilt -> knox-core/knox-enterprise -> core modules
 ```
 
 ### Hilt Modules Provided
