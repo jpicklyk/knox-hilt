@@ -23,7 +23,7 @@ knox-hilt is a Dagger Hilt integration module that provides dependency injection
 
 ### Module Dependency Flow
 ```
-your-app -> knox-hilt -> knox-core/knox-enterprise -> core modules
+app -> knox-hilt -> knox-core/knox-enterprise -> core modules
 ```
 
 ### Hilt Modules Provided
@@ -64,7 +64,7 @@ object CustomGroupingModule {
             GroupingConfiguration.builder()
                 .addGroup("quick", "Quick Access")
                 .addGroup("advanced", "Advanced")
-                .assignPolicies("quick", "tactical_device_mode", "night_vision_mode")
+                .assignPolicies("quick", "device_lock_mode", "screen_brightness")
                 .build()
         )
     }
